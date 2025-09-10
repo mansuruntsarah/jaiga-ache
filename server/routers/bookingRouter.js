@@ -4,9 +4,9 @@ const router = express.Router();
 
 const { auth, authorize } = require('../middleware/auth');
 
-// Get all bookings (admin only)
 
-// GET /api/bookings?busNumber=1&date=2025-09-10&trip=1
+
+
 router.get('/', auth, async (req, res) => {
   try {
     const query = {};
@@ -19,7 +19,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Get bookings for a user (client only, or admin/staff)
+
 router.get('/user/:userId', auth, async (req, res) => {
   if (req.user.role === 'admin' || req.user.role === 'staff' || req.user._id.toString() === req.params.userId) {
     try {
@@ -38,13 +38,13 @@ router.get('/user/:userId', auth, async (req, res) => {
   }
 });
 
-// Get booked seats for a bus/trip/date
+
 router.get('/seats', async (req, res) => {
   const { busNumber, trip, date } = req.query;
   const bookings = await Booking.find({ busNumber, trip, date });
   res.json(bookings.map(b => b.seatNumber));
 });
 
-// Bookings are created only after payment (see paymentRouter)
+
 
 module.exports = router;

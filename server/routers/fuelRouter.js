@@ -4,14 +4,14 @@ const router = express.Router();
 
 const { auth, authorize } = require('../middleware/auth');
 
-// Get all fuel logs (admin only)
+
 router.get('/', auth, authorize('admin'), async (req, res) => {
   const fuelLogs = await Fuel.find().populate('addedBy');
   res.json(fuelLogs);
 });
 
 
-// Add a new fuel log (staff only)
+
 router.post('/', auth, authorize('staff'), async (req, res) => {
   try {
     const { busNumber, amount } = req.body;

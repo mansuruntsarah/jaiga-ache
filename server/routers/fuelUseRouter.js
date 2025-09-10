@@ -4,13 +4,13 @@ const router = express.Router();
 const { auth, authorize } = require('../middleware/auth');
 
 
-// Get fuel use for all buses (admin only)
+
 router.get('/', auth, authorize('admin'), async (req, res) => {
   const fuelUses = await FuelUse.find();
   res.json(fuelUses);
 });
 
-// Get fuel use for a specific bus (staff only)
+
 router.get('/bus/:busNumber', auth, authorize('staff'), async (req, res) => {
   const busNumber = Number(req.params.busNumber);
   if (!busNumber) return res.status(400).json({ error: 'busNumber required' });
@@ -19,7 +19,7 @@ router.get('/bus/:busNumber', auth, authorize('staff'), async (req, res) => {
   res.json(fuelUse);
 });
 
-// Update fuel use for a bus (staff only)
+
 router.post('/', auth, authorize('staff'), async (req, res) => {
   try {
     console.log('POST /api/fuel_use body:', req.body);

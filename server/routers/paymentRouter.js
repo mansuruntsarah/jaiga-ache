@@ -37,13 +37,13 @@ router.post('/', auth, authorize('client'), async (req, res) => {
   }
 });
 
-// Get all payments (admin only, flat data for dashboard)
+
 router.get('/', async (req, res) => {
   const payments = await Payment.find({}, { trip: 1, busNumber: 1, dateTime: 1, amount: 1, _id: 1 });
   res.json(payments);
 });
 
-// Get payments for a user (client only, or admin/staff)
+
 router.get('/user/:userId', auth, async (req, res) => {
   if (req.user.role === 'admin' || req.user.role === 'staff' || req.user._id.toString() === req.params.userId) {
     const payments = await Payment.find({ user: req.params.userId }).populate('booking');

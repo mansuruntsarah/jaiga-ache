@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const router = express.Router();
 
-// Register
+
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, ID, isAdmin, isClient, isStaff } = req.body;
@@ -30,21 +30,21 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
+
 router.post('/login', async (req, res) => {
   try {
     const { email, bracuId, password } = req.body;
-    // Debug logging
+    
     console.log('Login attempt:', { email, bracuId });
     let user = null;
-    // Debug: print all user IDs
+    
     const allUsers = await User.find({});
     console.log('All user IDs:', allUsers.map(u => u.ID));
     if (email) {
       user = await User.findOne({ email });
       console.log('User found by email:', user);
     } else if (bracuId) {
-      // Use case-insensitive regex for ID lookup
+      
       user = await User.findOne({ ID: { $regex: `^${bracuId}$`, $options: 'i' } });
       console.log('User found by ID:', user);
     }
@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
       console.log('No user found for credentials');
       return res.status(400).json({ error: 'Invalid credentials: user not found' });
     }
-    // Check if password is hashed
+    
     if (typeof user.password !== 'string' || !user.password.startsWith('$2')) {
       console.log('User password is not hashed:', user.password);
       return res.status(400).json({ error: 'Password not hashed in database' });
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
       console.log('Password mismatch for user:', user.ID);
       return res.status(400).json({ error: 'Invalid credentials: password mismatch' });
     }
-    // Fix: use user.isAdmin, isClient, isStaff instead of user.role
+    
     const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, isClient: user.isClient, isStaff: user.isStaff }, process.env.JWT_SECRET || 'defaultsecret', { expiresIn: '7d' });
     res.json({ token, user });
   } catch (err) {
@@ -71,7 +71,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Debug endpoint to list all users
+
 router.get('/debug-users', async (req, res) => {
   const users = await User.find({});
   res.json(users);

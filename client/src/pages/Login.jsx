@@ -20,19 +20,19 @@ const Login = () => {
 
   const [error, setError] = useState('');
 
-  // Validation helpers
+
   const isValidBracuId = (id) => {
-    // Must be exactly 11 alphanumeric characters, no special chars, no negative numbers, no leading zero
+
     return /^[A-Za-z0-9]{11}$/.test(id) && !id.startsWith('0') && !id.includes('-');
   };
-  // ...existing code...
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     if (isSignUp) {
-      // Validate fields
+
       if (!form.name.trim()) {
         setError('Name is required.');
         return;
@@ -49,7 +49,7 @@ const Login = () => {
         setError('Password is required.');
         return;
       }
-      // Set role booleans
+
       let isAdmin = false, isClient = false, isStaff = false;
       if (form.bracuId === '11010101010' && form.password === '1234') {
         isAdmin = true;
@@ -58,7 +58,7 @@ const Login = () => {
       } else if (/^[A-Za-z0-9]{11}$/.test(form.bracuId)) {
         isStaff = true;
       }
-      // Send to backend
+
       try {
         const res = await fetch('http://localhost:471/api/auth/register', {
           method: 'POST',
@@ -88,7 +88,7 @@ const Login = () => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data.user._id);
         localStorage.setItem('userName', data.user.name);
-        // Redirect based on user role
+
         if (data.user.isAdmin) {
           navigate('/AdminDash');
         } else if (data.user.isStaff) {
@@ -96,7 +96,7 @@ const Login = () => {
         } else if (data.user.isClient) {
           navigate('/ClientDash');
         } else {
-          navigate('/'); // fallback
+          navigate('/');
         }
       } catch (err) {
         setError('Network error');
@@ -111,7 +111,7 @@ const Login = () => {
         setError('Password is required.');
         return;
       }
-      // Authenticate with backend
+
       try {
         const res = await fetch('http://localhost:471/api/auth/login', {
           method: 'POST',
@@ -126,16 +126,16 @@ const Login = () => {
           return;
         }
         if (!res.ok) {
-          // Show detailed error for debugging
+
           setError(data.error ? `Login failed: ${data.error}` : `Login failed (status ${res.status})`);
-          // Optionally log to console for developer
+
           console.error('Login error:', data);
           return;
         }
   localStorage.setItem('token', data.token);
   localStorage.setItem('userId', data.user._id);
   localStorage.setItem('userName', data.user.name);
-        // Redirect based on user role
+
         if (data.user.isAdmin) {
           navigate('/AdminDash');
         } else if (data.user.isStaff) {
@@ -143,7 +143,7 @@ const Login = () => {
         } else if (data.user.isClient) {
           navigate('/ClientDash');
         } else {
-          navigate('/'); // fallback
+          navigate('/');
         }
       } catch (err) {
         setError('Network error');

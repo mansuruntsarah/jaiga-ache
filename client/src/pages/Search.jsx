@@ -12,7 +12,7 @@ const Search = () => {
         setLoading(true);
         setMessage('');
 
-    // Directly call the backend API for search
+
     try {
       const response = await fetch('http://localhost:471/api/search', {
         method: 'POST',

@@ -54,37 +54,37 @@ function AttendancePanel({ dutyBus }) {
   );
 }
 
-// ...existing code...
+
 
 const StaffDash = () => {
-  // Fuel use state
+
   const [fuelUse, setFuelUse] = useState(null);
-  // Fuel log state
+
   const MAX_FUEL = 120;
-  const [fuelRemaining, setFuelRemaining] = useState(50); // in liters
+  const [fuelRemaining, setFuelRemaining] = useState(50);
   const [showFuelPrompt, setShowFuelPrompt] = useState(false);
   const [fuelToAdd, setFuelToAdd] = useState("");
   const [fuelError, setFuelError] = useState("");
   const [activePanel, setActivePanel] = useState('welcome');
-  // Report state
+
   const [reportText, setReportText] = useState("");
   const [reportSubmitted, setReportSubmitted] = useState(false);
 
-  // Duty info state
+
   const [dutyBus, setDutyBus] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [selectedTrip, setSelectedTrip] = useState(1);
   useEffect(() => {
     const fetchDutyAndBookings = async () => {
       try {
-        // Fetch bus collection
+
         const busRes = await fetch('http://localhost:471/api/bus');
         if (busRes.ok) {
           const buses = await busRes.json();
           const userName = localStorage.getItem('userName');
           const assignedBus = buses.find(bus => bus.attendant === userName);
           setDutyBus(assignedBus || null);
-          // Fetch today's bookings for this bus and selected trip
+
           if (assignedBus) {
             const today = new Date().toISOString().slice(0, 10);
             const token = localStorage.getItem('token');
@@ -115,7 +115,7 @@ const StaffDash = () => {
     };
     fetchDutyAndBookings();
 
-    // Fetch fuel use for this bus
+
     const fetchFuelUse = async () => {
       const token = localStorage.getItem('token');
       if (!dutyBus?.busNumber) return;
@@ -146,7 +146,7 @@ const StaffDash = () => {
     <div className="min-h-[70vh] flex flex-col items-center">
       <h1 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Welcome, {localStorage.getItem('userName') || 'User'}!</h1>
       <div className="flex w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
-        {/* Left side panel */}
+
         <div className="w-1/3 bg-gray-100 p-6 flex flex-col gap-4 border-r">
           <button
             className={`w-full bg-gray-900 text-yellow-400 font-bold py-2 rounded hover:bg-yellow-400 hover:text-gray-900 transition mb-2 ${activePanel === 'duty' ? 'ring-2 ring-yellow-400' : ''}`}
@@ -173,7 +173,7 @@ const StaffDash = () => {
             Report
           </button>
         </div>
-        {/* Right panel: dynamic content */}
+
         <div className="w-2/3 p-8 flex flex-col items-center justify-start">
           {activePanel === 'report' && (
             <div className="bg-gray-100 rounded-lg p-6 w-full max-w-md text-center shadow">
@@ -321,7 +321,7 @@ const StaffDash = () => {
                       const busNumber = dutyBus?.busNumber;
                       const token = localStorage.getItem('token');
                       try {
-                        // Log fuel addition
+
                         const res = await fetch('http://localhost:471/api/fuels', {
                           method: 'POST',
                           headers: {
@@ -330,7 +330,7 @@ const StaffDash = () => {
                           },
                           body: JSON.stringify({ busNumber, amount })
                         });
-                        // Update fuel use status
+
                         const newFuelRemaining = (fuelUse ? fuelUse.fuel_status : fuelRemaining) + amount;
                         const fuelUseRes = await fetch('http://localhost:471/api/fuel_use', {
                           method: 'POST',
@@ -345,7 +345,7 @@ const StaffDash = () => {
                           setFuelToAdd("");
                           setShowFuelPrompt(false);
                           setFuelError("");
-                          // Refresh fuel use data immediately
+
                           try {
                             const refreshRes = await fetch(`http://localhost:471/api/fuel_use/bus/${busNumber}`, {
                               method: 'GET',
@@ -356,7 +356,7 @@ const StaffDash = () => {
                             });
                             if (refreshRes.ok) {
                               const updatedFuelUse = await refreshRes.json();
-                              // Force miles_driven to 0 in frontend state
+
                               setFuelUse({ ...updatedFuelUse, miles_driven: 0 });
                             }
                           } catch {}

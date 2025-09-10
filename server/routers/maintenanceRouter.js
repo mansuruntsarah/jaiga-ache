@@ -4,14 +4,14 @@ const router = express.Router();
 
 const { auth, authorize } = require('../middleware/auth');
 
-// Get all maintenance logs (admin only)
+
 router.get('/', auth, authorize('admin'), async (req, res) => {
   const maintenanceLogs = await Maintenance.find();
   res.json(maintenanceLogs);
 });
 
 
-// Add a new maintenance report (staff only)
+
 router.post('/', auth, authorize('staff'), async (req, res) => {
   try {
     const { busNumber, notes } = req.body;

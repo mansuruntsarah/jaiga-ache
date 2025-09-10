@@ -5,13 +5,13 @@ const User = require('../models/User');
 const { auth, authorize } = require('../middleware/auth');
 const router = express.Router();
 
-// Get all buses with route info
+
 router.get('/routes', auth, authorize('admin'), async (req, res) => {
   try {
     const buses = await Bus.find();
     const routes = await Route.find();
     const users = await User.find({ isStaff: true });
-    // Always show all buses, display driver/attendant names if matched, else show as-is
+    
     const combined = buses.map(bus => {
       const route = routes.find(r => r.id === bus.busNumber);
       const driverUser = users.find(u => u.name === bus.driver);
@@ -30,15 +30,15 @@ router.get('/routes', auth, authorize('admin'), async (req, res) => {
     res.status(500).json({ error: 'Failed to join bus, route, and user data' });
   }
 });
-// ...existing code...
 
-// Get all buses
+
+
 router.get('/', async (req, res) => {
   const buses = await Bus.find();
   res.json(buses);
 });
 
-// Update driver, attendant, or attendantAssignedDate for a bus
+
 router.put('/:busNumber', async (req, res) => {
   const { driver, attendant, attendantAssignedDate } = req.body;
   const update = {};
@@ -54,7 +54,7 @@ router.put('/:busNumber', async (req, res) => {
 });
 
 
-// Staff marks attendance for today
+
 router.post('/attendance/:busNumber', auth, authorize('staff'), async (req, res) => {
   const busNumber = req.params.busNumber;
   const userName = req.user.name;

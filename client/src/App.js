@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-100 via-white to-yellow-300">
-        {/* Navbar code integrated here */}
+
         <nav className="bg-gray-900 text-white p-4">
           <div className="max-w-6xl mx-auto flex justify-between">
             <Link to="/" className="text-xl font-bold hover:text-yellow-400">Jaiga Ache 🚍</Link>
@@ -34,7 +34,7 @@ function App() {
             <Route path="/StaffDash" element={<StaffDash />} />
           </Routes>
         </div>
-        {/* Footer added */}
+
         <footer className="bg-gray-900 text-white text-center p-2">
           CSE470 Project by Mansurun
         </footer>
